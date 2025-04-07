@@ -1,0 +1,47 @@
+--static
+    type: bool
+    default: False
+    help: If True, then use only first video frame for inference
+--fps
+    type: float
+    default: 25.
+    required: False
+    help: Can be specified only if input is a static image (default: 25)
+--pads
+    nargs: +
+    type: int
+    default: [0, 10, 0, 0]
+    help: Padding (top, bottom, left, right). Please adjust to include chin at least
+--face_det_batch_size
+    type: int
+    default: 16
+    help: Batch size for face detection
+--wav2lip_batch_size
+    type: int
+    default: 128
+    help: Batch size for Wav2Lip model(s)
+--resize_factor
+    type: int
+    default: 1
+    help: Reduce the resolution by this factor. Sometimes, best results are obtained at 480p or 720p
+--crop
+    nargs: +
+    type: int
+    default: [0, -1, 0, -1]
+    help: Crop video to a smaller region (top, bottom, left, right). Applied after resize_factor and rotate arg.
+            Useful if multiple face present. -1 implies the value will be auto-inferred based on height, width
+--box
+    nargs: +
+    type: int
+    default: [-1, -1, -1, -1]
+    help: Specify a constant bounding box for the face. Use only as a last resort if the face is not detected.
+            Also, might work only if the face is not moving around much. Syntax: (top, bottom, left, right).
+--rotate
+    default: False
+    action: store_true
+    help: Sometimes videos taken from a phone can be flipped 90deg. If true, will flip video right by 90deg.
+            Use if you get a flipped result, despite feeding a normal looking video
+--nosmooth
+    default: False
+    action: store_true
+    help: Prevent smoothing face detections over a short temporal window

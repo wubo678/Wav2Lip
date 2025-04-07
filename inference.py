@@ -161,8 +161,7 @@ def _load(checkpoint_path):
 	if device == 'cuda':
 		checkpoint = torch.load(checkpoint_path)
 	else:
-		checkpoint = torch.load(checkpoint_path,
-								map_location=lambda storage, loc: storage)
+		checkpoint = torch.load(checkpoint_path, map_location=lambda storage, loc: storage)
 	return checkpoint
 
 def load_model(path):
@@ -253,8 +252,8 @@ def main():
 			print ("Model loaded")
 
 			frame_h, frame_w = full_frames[0].shape[:-1]
-			out = cv2.VideoWriter('temp/result.avi', 
-									cv2.VideoWriter_fourcc(*'DIVX'), fps, (frame_w, frame_h))
+			# out = cv2.VideoWriter('temp/result.avi', cv2.VideoWriter_fourcc(*'DIVX'), fps, (frame_w, frame_h))
+			out = cv2.VideoWriter('temp/result.mp4', cv2.VideoWriter_fourcc(*'mp4v'), fps, (frame_w, frame_h))
 
 		img_batch = torch.FloatTensor(np.transpose(img_batch, (0, 3, 1, 2))).to(device)
 		mel_batch = torch.FloatTensor(np.transpose(mel_batch, (0, 3, 1, 2))).to(device)
@@ -273,7 +272,9 @@ def main():
 
 	out.release()
 
-	command = 'ffmpeg -y -i {} -i {} -strict -2 -q:v 1 {}'.format(args.audio, 'temp/result.avi', args.outfile)
+	# command = 'ffmpeg -y -i {} -i {} -strict -2 -q:v 1 {}'.format(args.audio, 'temp/result.avi', args.outfile)
+	command = 'ffmpeg -y -i {} -i {} -c:v copy -c:a aac -strict -2 {}'.format(args.audio, 'temp/result.mp4', args.outfile)
+
 	subprocess.call(command, shell=platform.system() != 'Windows')
 
 if __name__ == '__main__':
